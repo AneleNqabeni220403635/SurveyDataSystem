@@ -21,26 +21,31 @@ public class SurveyFormService implements ISurveyFormService {
 
     @Override
     public SurveyForm create(SurveyForm survey) {
+
         return repository.save(survey);
     }
 
     @Override
     public SurveyForm read(Long id) {
+
         return repository.findById(id).orElse(null);
     }
 
     @Override
     public SurveyForm update(SurveyForm survey) {
+
         return repository.save(survey);
     }
 
     @Override
     public void delete(Long id) {
+
         repository.deleteById(id);
     }
 
     @Override
     public Set<SurveyForm> getall() {
+
         return repository.findAll().stream().collect(Collectors.toSet());
     }
 }

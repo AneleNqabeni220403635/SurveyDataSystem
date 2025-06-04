@@ -20,7 +20,7 @@ public enum FavouriteFood {
 
     public static FavouriteFood fromKey(String key) {
         for (FavouriteFood food : values()) {
-            System.out.println(food.foodName);
+          //  System.out.println(food.foodName);
             if (Objects.equals(food.foodName, key.trim())) {
                 return food;
             }

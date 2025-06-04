@@ -1,7 +1,12 @@
 package za.ac.cput.frontend;
 
+import za.ac.cput.model.FavouriteFood;
+import za.ac.cput.model.PreferenceRating;
+import za.ac.cput.model.UserPreference;
+import za.ac.cput.repository.UserPreferenceRepository;
+import za.ac.cput.service.UserPreferenceService;
+
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -61,6 +66,9 @@ public class SurveyApp {
         frame.add(panel);
         frame.setVisible(true);
 
+        UserPreferenceRepository userPreferenceRepository = new UserPreferenceRepository();
+        UserPreferenceService userPreferenceService = new UserPreferenceService(userPreferenceRepository);
+
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -83,10 +91,25 @@ public class SurveyApp {
                 String eatOutRating = (String) eatOutBox.getSelectedItem();
                 String tvRating = (String) tvBox.getSelectedItem();
 
+                System.out.println(fullName);
+                System.out.println(email);
+                System.out.println(dob);
                 System.out.println(contact);
 
-// Save data to database (to be implemented)
+
+                UserPreference userPreference = new UserPreference()
+                        .setName(fullName)
+                        .setCell(contact)
+                        .setEmail(email)
+                        .setDob(dob).setFavouriteFood(FavouriteFood.fromKey(favoriteFood.toString()))
+                        .setWatchingTV(PreferenceRating.fromKey(tvRating))
+                        .setEatOut(PreferenceRating.fromKey(eatOutRating))
+                        .setWatchingMovies(PreferenceRating.fromKey(moviesRating))
+                        .setListeningToRadio(PreferenceRating.fromKey(radioRating));
+
+                userPreferenceService.saveUserPreference(userPreference);
+
             }
-        });
-    }
+   });
+}
 }
