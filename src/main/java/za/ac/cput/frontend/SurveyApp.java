@@ -1,17 +1,33 @@
 package za.ac.cput.frontend;
 
+import org.springframework.boot.SpringApplication;
+import za.ac.cput.SurveyApplication;
+import za.ac.cput.domain.SurveyForm;
 import za.ac.cput.model.FavouriteFood;
 import za.ac.cput.model.PreferenceRating;
 import za.ac.cput.model.UserPreference;
 import za.ac.cput.repository.UserPreferenceRepository;
+import za.ac.cput.service.SurveyFormService;
 import za.ac.cput.service.UserPreferenceService;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class SurveyApp {
     public static void main(String[] args) {
+
+        System.setProperty("java.awt.headless", "false");
+
+        ApplicationContext context = SpringApplication.run(SurveyApplication.class, args);
+
+// Get UserPreferenceService from Spring
+        UserPreferenceService userPreferenceService = context.getBean(UserPreferenceService.class);
+        SurveyFormService surveyFormService = context.getBean(SurveyFormService.class);
+
         JFrame frame = new JFrame("Survey");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 500);
@@ -66,9 +82,6 @@ public class SurveyApp {
         frame.add(panel);
         frame.setVisible(true);
 
-        UserPreferenceRepository userPreferenceRepository = new UserPreferenceRepository();
-        UserPreferenceService userPreferenceService = new UserPreferenceService(userPreferenceRepository);
-
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -96,12 +109,8 @@ public class SurveyApp {
                 System.out.println(dob);
                 System.out.println(contact);
 
-
                 UserPreference userPreference = new UserPreference()
-                        .setName(fullName)
-                        .setCell(contact)
-                        .setEmail(email)
-                        .setDob(dob).setFavouriteFood(FavouriteFood.fromKey(favoriteFood.toString()))
+                        .setFavouriteFood(FavouriteFood.fromKey(favoriteFood.toString()))
                         .setWatchingTV(PreferenceRating.fromKey(tvRating))
                         .setEatOut(PreferenceRating.fromKey(eatOutRating))
                         .setWatchingMovies(PreferenceRating.fromKey(moviesRating))
@@ -109,7 +118,17 @@ public class SurveyApp {
 
                 userPreferenceService.saveUserPreference(userPreference);
 
+                SurveyForm surveyForm = new SurveyForm()
+                        .setName(fullName)
+                        .setCell(contact)
+                        .setEmail(email)
+                        .setDob(dob)
+                        .setPreferenceId(userPreference.getId());
+
+                surveyFormService.saveSurveyForm(surveyForm);
+
+
             }
-   });
-}
+        });
+    }
 }
