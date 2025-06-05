@@ -1,6 +1,7 @@
 package za.ac.cput.model;
 
 import jakarta.persistence.*;
+import za.ac.cput.domain.SurveyForm;
 
 @Entity
 public class UserPreference {
@@ -8,10 +9,6 @@ public class UserPreference {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String cell;
-    private String email;
-    private String dob;
     private FavouriteFood favouriteFood;
 
     @Enumerated(EnumType.STRING)
@@ -22,33 +19,18 @@ public class UserPreference {
 
     @Enumerated(EnumType.STRING)
     private PreferenceRating eatOut;
+
     @Enumerated(EnumType.STRING)
     private PreferenceRating watchingTV;
 
     public UserPreference() {}
 
     // Fluent setters
-    public UserPreference setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public UserPreference setCell(String cell) {
-        this.cell = cell;
-        return this;
-    }
-    public UserPreference setDob(String dob) {
-        this.dob = dob;
-        return this;
-    }
-
-    public UserPreference setEmail(String email) {
-        this.email = email;
-        return this;}
     public UserPreference setFavouriteFood(FavouriteFood favouriteFood) {
         this.favouriteFood = favouriteFood;
         return this;
     }
+
     public UserPreference setWatchingMovies(PreferenceRating watchingMovies) {
         this.watchingMovies = watchingMovies;
         return this;
@@ -58,6 +40,7 @@ public class UserPreference {
         this.listeningToRadio = listeningToRadio;
         return this;
     }
+
     public UserPreference setEatOut(PreferenceRating eatOut) {
         this.eatOut = eatOut;
         return this;
@@ -67,24 +50,10 @@ public class UserPreference {
         this.watchingTV = watchingTV;
         return this;
     }
-    // Getters (standard)
+
+    // Getters
     public Long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCell() {
-        return cell;
-    }
-
-    public String getDob() {
-        return dob;
-    }
-    public String getEmail() {
-        return email;
     }
 
     public FavouriteFood getFavouriteFood() {
@@ -94,15 +63,16 @@ public class UserPreference {
     public PreferenceRating getWatchingMovies() {
         return watchingMovies;
     }
+
     public PreferenceRating getListeningToRadio() {
         return listeningToRadio;
     }
+
     public PreferenceRating getEatOut() {
         return eatOut;
     }
 
     public PreferenceRating getWatchingTV() {
         return watchingTV;
-}
-
+    }
 }

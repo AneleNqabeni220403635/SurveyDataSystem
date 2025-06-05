@@ -1,8 +1,7 @@
 package za.ac.cput.domain;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
+import za.ac.cput.model.UserPreference;
 
 @Entity
 public class SurveyForm {
@@ -13,11 +12,61 @@ public class SurveyForm {
 
     private String fullName;
     private String email;
-    private int contactNumber;
-    private LocalDate dateOfBirth;
-    private int age;
+    private String contactNumber;
+    private String dateOfBirth;
 
-    public SurveyForm() {
+    private Long preferenceId;
+
+    public SurveyForm() {}
+
+    // Fluent setters
+    public SurveyForm setName(String fullName) {
+        this.fullName = fullName;
+        return this;
     }
 
+    public SurveyForm setCell(String contactNumber) {
+        this.contactNumber = contactNumber;
+        return this;
+    }
+
+    public SurveyForm setDob(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+        return this;
+    }
+
+    public SurveyForm setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public SurveyForm setPreferenceId(Long preferenceId) {
+        this.preferenceId = preferenceId;
+        return this;
+    }
+
+    // Getters
+    public Long getId() {
+        return id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public Long getPreferenceId() {
+        return preferenceId;
+    }
 }
