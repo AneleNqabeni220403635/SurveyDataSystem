@@ -1,5 +1,6 @@
 package za.ac.cput.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import za.ac.cput.model.UserPreference;
 import za.ac.cput.repository.SurveyFormRepository;
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 @Service
 public class UserPreferenceService {
-
+    @Autowired
     private final UserPreferenceRepository repository;
 
     public UserPreferenceService(UserPreferenceRepository repository) {
@@ -19,5 +20,5 @@ public class UserPreferenceService {
 
     public UserPreference saveUserPreference(UserPreference preference) {
         return repository.save(preference);
-}
+    }
 }
