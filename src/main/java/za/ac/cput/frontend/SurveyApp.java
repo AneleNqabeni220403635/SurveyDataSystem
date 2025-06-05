@@ -6,7 +6,6 @@ import za.ac.cput.domain.SurveyForm;
 import za.ac.cput.model.FavouriteFood;
 import za.ac.cput.model.PreferenceRating;
 import za.ac.cput.model.UserPreference;
-import za.ac.cput.repository.UserPreferenceRepository;
 import za.ac.cput.service.SurveyFormService;
 import za.ac.cput.service.UserPreferenceService;
 
@@ -15,7 +14,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class SurveyApp {
     public static void main(String[] args) {
@@ -24,16 +22,17 @@ public class SurveyApp {
 
         ApplicationContext context = SpringApplication.run(SurveyApplication.class, args);
 
-// Get UserPreferenceService from Spring
+        // Get services from Spring
         UserPreferenceService userPreferenceService = context.getBean(UserPreferenceService.class);
         SurveyFormService surveyFormService = context.getBean(SurveyFormService.class);
 
         JFrame frame = new JFrame("Survey");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 500);
+        frame.setSize(500, 700); // Increased size to fit everything
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JTextField fullNameField = new JTextField(20);
         JTextField emailField = new JTextField(20);
@@ -52,6 +51,7 @@ public class SurveyApp {
         JComboBox<String> tvBox = new JComboBox<>(options);
 
         JButton submitButton = new JButton("Submit");
+        JButton viewResultsButton = new JButton("View Survey Results");
 
         panel.add(new JLabel("Full Names:"));
         panel.add(fullNameField);
@@ -68,6 +68,9 @@ public class SurveyApp {
         panel.add(papCheck);
         panel.add(otherCheck);
 
+        panel.add(new JLabel("Please rate your level of agreement on a scale from 1 to 5, with 1 being strongly agree and 5 being strongly disagree."));
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+
         panel.add(new JLabel("I like to watch movies:"));
         panel.add(moviesBox);
         panel.add(new JLabel("I like to listen to radio:"));
@@ -77,28 +80,35 @@ public class SurveyApp {
         panel.add(new JLabel("I like to watch TV:"));
         panel.add(tvBox);
 
-        panel.add(submitButton);
+        // Create horizontal button panel
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(submitButton);
+        buttonPanel.add(viewResultsButton);
 
+        // Add spacing then buttons
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(buttonPanel);
+
+        // Add main panel to frame
         frame.add(panel);
         frame.setVisible(true);
 
+        // Submit button logic
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-// Handle form submission
                 String fullName = fullNameField.getText();
                 String email = emailField.getText();
                 String dob = dobField.getText();
                 String contact = contactField.getText();
 
-// Collect favorite food selections
                 StringBuilder favoriteFood = new StringBuilder();
                 if (pizzaCheck.isSelected()) favoriteFood.append("Pizza ");
                 if (pastaCheck.isSelected()) favoriteFood.append("Pasta ");
                 if (papCheck.isSelected()) favoriteFood.append("Pap and Wors ");
                 if (otherCheck.isSelected()) favoriteFood.append("Other ");
 
-// Collect ratings
                 String moviesRating = (String) moviesBox.getSelectedItem();
                 String radioRating = (String) radioBox.getSelectedItem();
                 String eatOutRating = (String) eatOutBox.getSelectedItem();
@@ -122,12 +132,18 @@ public class SurveyApp {
                         .setName(fullName)
                         .setCell(contact)
                         .setEmail(email)
-                        .setDob(dob)
-                        .setPreferenceId(userPreference.getId());
+                        .setDob(dob);
+
 
                 surveyFormService.saveSurveyForm(surveyForm);
+            }
+        });
 
-
+        // View results button logic
+        viewResultsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new SurveyResultsScreen(surveyFormService, userPreferenceService);
             }
         });
     }

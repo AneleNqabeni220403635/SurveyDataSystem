@@ -21,4 +21,17 @@ public class UserPreferenceService {
     public UserPreference saveUserPreference(UserPreference preference) {
         return repository.save(preference);
     }
+    public double getAverageRating(String category) {
+        List<UserPreference> prefs = repository.findAll();
+        return prefs.stream()
+                .mapToInt(p -> switch (category.toLowerCase()) {
+                    case "movies" -> p.getWatchingMovies().getNumericValue();
+                    case "radio" -> p.getListeningToRadio().getNumericValue();
+                    case "eatout" -> p.getEatOut().getNumericValue();
+                    case "tv" -> p.getWatchingTV().getNumericValue();
+                    default -> 0;
+                })
+                .average()
+                .orElse(0.0);
+    }
 }

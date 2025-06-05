@@ -6,4 +6,5 @@ import za.ac.cput.domain.SurveyForm;
 
 @Repository
 public interface SurveyFormRepository extends JpaRepository<SurveyForm,Long> {
+
 }

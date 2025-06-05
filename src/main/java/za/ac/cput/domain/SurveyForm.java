@@ -15,7 +15,10 @@ public class SurveyForm {
     private String contactNumber;
     private String dateOfBirth;
 
-    private Long preferenceId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "preference_id")
+    private UserPreference preference;
+
 
     public SurveyForm() {}
 
@@ -40,10 +43,6 @@ public class SurveyForm {
         return this;
     }
 
-    public SurveyForm setPreferenceId(Long preferenceId) {
-        this.preferenceId = preferenceId;
-        return this;
-    }
 
     // Getters
     public Long getId() {
@@ -66,7 +65,7 @@ public class SurveyForm {
         return dateOfBirth;
     }
 
-    public Long getPreferenceId() {
-        return preferenceId;
+    public UserPreference getPreference() {
+        return preference;
     }
 }
