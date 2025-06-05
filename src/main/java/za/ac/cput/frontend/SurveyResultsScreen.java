@@ -22,6 +22,7 @@ public class SurveyResultsScreen extends JFrame {
         int maxAge = surveyFormService.getMaxAge();
         int minAge = surveyFormService.getMinAge();
         double percentagePizza = surveyFormService.calculatePercentageLikedFood("Pizza");
+        double percentagePasta = surveyFormService.calculatePercentageLikedFood("Pasta");
         double percentagePap = surveyFormService.calculatePercentageLikedFood("Pap and Wors");
 
         double avgMovies = userPreferenceService.getAverageRating("movies");
@@ -32,14 +33,14 @@ public class SurveyResultsScreen extends JFrame {
         panel.add(new JLabel("Survey Results"));
         panel.add(new JLabel("Total number of surveys: " + totalSurveys));
         panel.add(new JLabel("Average Age: " + averageAge));
-        panel.add(new JLabel("Oldest person: " + maxAge));
-        panel.add(new JLabel("Youngest person: " + minAge));
-        panel.add(new JLabel("Percentage who like Pizza: " + percentagePizza + "%"));
-        panel.add(new JLabel("Percentage who like Pap and Wors: " + percentagePap + "%"));
-        panel.add(new JLabel("Rating - Watching Movies: " + avgMovies));
-        panel.add(new JLabel("Rating - Listening to Radio: " + avgRadio));
-        panel.add(new JLabel("Rating - Eating Out: " + avgEatOut));
-        panel.add(new JLabel("Rating - Watching TV: " + avgTV));
+        panel.add(new JLabel("Oldest person who participated in the survey: " + maxAge));
+        panel.add(new JLabel("Youngest person who participated in the survey: " + minAge));
+        panel.add(new JLabel("Percentage of people who like Pizza: " + percentagePizza + "%"));
+        panel.add(new JLabel("Percentage of people who like Pap and Wors: " + percentagePap + "%"));
+        panel.add(new JLabel("People who like to watch movies: " + avgMovies));
+        panel.add(new JLabel("People who like to to Radio: " + avgRadio));
+        panel.add(new JLabel("People who like to eat out: " + avgEatOut));
+        panel.add(new JLabel("People who like to watch TV: " + avgTV));
 
         add(panel);
         setVisible(true);

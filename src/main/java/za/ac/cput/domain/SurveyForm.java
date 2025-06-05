@@ -3,6 +3,8 @@ package za.ac.cput.domain;
 import jakarta.persistence.*;
 import za.ac.cput.model.UserPreference;
 
+import java.time.LocalDate;
+
 @Entity
 public class SurveyForm {
 
@@ -13,7 +15,7 @@ public class SurveyForm {
     private String fullName;
     private String email;
     private String contactNumber;
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "preference_id")
@@ -33,7 +35,7 @@ public class SurveyForm {
         return this;
     }
 
-    public SurveyForm setDob(String dateOfBirth) {
+    public SurveyForm setDob(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
         return this;
     }
@@ -61,7 +63,7 @@ public class SurveyForm {
         return contactNumber;
     }
 
-    public String getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 

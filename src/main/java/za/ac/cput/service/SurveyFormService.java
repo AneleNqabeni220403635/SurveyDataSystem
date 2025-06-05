@@ -9,6 +9,7 @@ import za.ac.cput.service.Impl.ISurveyFormService;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,37 +21,46 @@ public class SurveyFormService {
 
     @Autowired
     public SurveyFormService(SurveyFormRepository repository) {
+
         this.repository = repository;
     }
 
     public SurveyForm saveSurveyForm(SurveyForm surveyForm) {
+
         return repository.save(surveyForm);
-}
+    }
+
     public int countTotalSurveys() {
+
         return (int) repository.count();
     }
 
     public double calculateAverageAge() {
-        List<SurveyForm> forms = repository.findAll();
-        return forms.stream()
-                .mapToInt(this::calculateAge)
+        List<SurveyForm> all = repository.findAll();
+        return all.stream()
+                .mapToInt(form -> calculateAge(form.getDateOfBirth()))
                 .average()
                 .orElse(0.0);
     }
 
     public int getMaxAge() {
-        return repository.findAll().stream()
-                .mapToInt(this::calculateAge)
+        List<SurveyForm> all = repository.findAll();
+        return all.stream()
+                .filter(form -> form.getDateOfBirth() != null)
+                .mapToInt(form -> calculateAge(form.getDateOfBirth()))
                 .max()
                 .orElse(0);
     }
 
     public int getMinAge() {
-        return repository.findAll().stream()
-                .mapToInt(this::calculateAge)
+        List<SurveyForm> all = repository.findAll();
+        return all.stream()
+                .filter(form -> form.getDateOfBirth() != null)
+                .mapToInt(form -> calculateAge(form.getDateOfBirth()))
                 .min()
                 .orElse(0);
     }
+
 
     public double calculatePercentageLikedFood(String food) {
         List<SurveyForm> forms = repository.findAll();
@@ -63,14 +73,11 @@ public class SurveyFormService {
         return total == 0 ? 0 : ((double) count / total) * 100;
     }
 
-    private int calculateAge(SurveyForm form) {
-        // Assuming dob format is "yyyy-MM-dd"
-        try {
-            LocalDate dob = LocalDate.parse(form.getDateOfBirth());
-            return Period.between(dob, LocalDate.now()).getYears();
-        } catch (Exception e) {
+    private int calculateAge(LocalDate dateOfBirth) {
+        if (dateOfBirth == null) {
             return 0;
         }
-    }
+        return Period.between(dateOfBirth, LocalDate.now()).getYears();
 
+    }
 }

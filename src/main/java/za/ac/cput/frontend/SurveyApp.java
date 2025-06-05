@@ -13,6 +13,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.context.ApplicationContext;
 
 public class SurveyApp {
@@ -128,14 +131,22 @@ public class SurveyApp {
 
                 userPreferenceService.saveUserPreference(userPreference);
 
-                SurveyForm surveyForm = new SurveyForm()
-                        .setName(fullName)
-                        .setCell(contact)
-                        .setEmail(email)
-                        .setDob(dob);
+                try {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    LocalDate parsedDob = LocalDate.parse(dob, formatter);
 
+                    SurveyForm surveyForm = new SurveyForm()
+                            .setName(fullName)
+                            .setCell(contact)
+                            .setEmail(email)
+                            .setDob(parsedDob);
 
-                surveyFormService.saveSurveyForm(surveyForm);
+                    surveyFormService.saveSurveyForm(surveyForm);
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(frame, "Invalid date format. Please use yyyy-MM-dd.");
+                }
+
             }
         });
 
