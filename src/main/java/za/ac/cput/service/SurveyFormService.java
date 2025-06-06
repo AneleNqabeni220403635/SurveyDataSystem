@@ -3,6 +3,7 @@ package za.ac.cput.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import za.ac.cput.domain.SurveyForm;
+import za.ac.cput.model.FavouriteFood;
 import za.ac.cput.model.UserPreference;
 import za.ac.cput.repository.SurveyFormRepository;
 import za.ac.cput.service.Impl.ISurveyFormService;
@@ -62,16 +63,20 @@ public class SurveyFormService {
     }
 
 
-    public double calculatePercentageLikedFood(String food) {
+    public double calculatePercentageLikedFood(FavouriteFood food) {
         List<SurveyForm> forms = repository.findAll();
         long total = forms.size();
+
         long count = forms.stream()
                 .filter(form -> form.getPreference() != null &&
                         form.getPreference().getFavouriteFood() != null &&
-                        form.getPreference().getFavouriteFood().toString().contains(food))
+                        form.getPreference().getFavouriteFood().equals(food))
                 .count();
+
         return total == 0 ? 0 : ((double) count / total) * 100;
     }
+
+
 
     private int calculateAge(LocalDate dateOfBirth) {
         if (dateOfBirth == null) {

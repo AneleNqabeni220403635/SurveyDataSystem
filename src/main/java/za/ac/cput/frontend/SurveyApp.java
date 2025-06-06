@@ -32,20 +32,32 @@ public class SurveyApp {
         JFrame frame = new JFrame("Survey");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 700); // Increased size to fit everything
+        frame.getContentPane().setBackground(Color.LIGHT_GRAY);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panel.setBackground(Color.LIGHT_GRAY);
+
+        Color labelColor = Color.WHITE;
+        Font labelFont = new Font("Arial", Font.BOLD, 16);
 
         JTextField fullNameField = new JTextField(20);
         JTextField emailField = new JTextField(20);
         JTextField dobField = new JTextField(20);
         JTextField contactField = new JTextField(20);
 
-        JCheckBox pizzaCheck = new JCheckBox("Pizza");
-        JCheckBox pastaCheck = new JCheckBox("Pasta");
-        JCheckBox papCheck = new JCheckBox("Pap and Wors");
-        JCheckBox otherCheck = new JCheckBox("Other");
+        ButtonGroup foodGroup = new ButtonGroup();
+        JRadioButton pizzaRadio = new JRadioButton("Pizza");
+        JRadioButton pastaRadio = new JRadioButton("Pasta");
+        JRadioButton papRadio = new JRadioButton("Pap and Wors");
+        JRadioButton otherRadio = new JRadioButton("Other");
+
+        foodGroup.add(pizzaRadio);
+        foodGroup.add(pastaRadio);
+        foodGroup.add(papRadio);
+        foodGroup.add(otherRadio);
+
 
         String[] options = {"Strongly Agree", "Agree", "Neutral", "Disagree", "Strongly Disagree"};
         JComboBox<String> moviesBox = new JComboBox<>(options);
@@ -66,10 +78,10 @@ public class SurveyApp {
         panel.add(contactField);
 
         panel.add(new JLabel("What is your favorite food?"));
-        panel.add(pizzaCheck);
-        panel.add(pastaCheck);
-        panel.add(papCheck);
-        panel.add(otherCheck);
+        panel.add(pizzaRadio);
+        panel.add(pastaRadio);
+        panel.add(papRadio);
+        panel.add(otherRadio);
 
         panel.add(new JLabel("Please rate your level of agreement on a scale from 1 to 5, with 1 being strongly agree and 5 being strongly disagree."));
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -83,9 +95,18 @@ public class SurveyApp {
         panel.add(new JLabel("I like to watch TV:"));
         panel.add(tvBox);
 
+        submitButton.setBackground(new Color(255, 102, 0));
+        submitButton.setForeground(Color.WHITE);
+        submitButton.setFont(labelFont);
+
+        viewResultsButton.setBackground(new Color(255, 102, 0));
+        viewResultsButton.setForeground(Color.WHITE);
+        viewResultsButton.setFont(labelFont);
+
         // Create horizontal button panel
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBackground(Color.LIGHT_GRAY);
         buttonPanel.add(submitButton);
         buttonPanel.add(viewResultsButton);
 
@@ -106,11 +127,19 @@ public class SurveyApp {
                 String dob = dobField.getText();
                 String contact = contactField.getText();
 
-                StringBuilder favoriteFood = new StringBuilder();
-                if (pizzaCheck.isSelected()) favoriteFood.append("Pizza ");
-                if (pastaCheck.isSelected()) favoriteFood.append("Pasta ");
-                if (papCheck.isSelected()) favoriteFood.append("Pap and Wors ");
-                if (otherCheck.isSelected()) favoriteFood.append("Other ");
+                String selectedFood = null;
+                if (pizzaRadio.isSelected()) selectedFood = "Pizza";
+                else if (pastaRadio.isSelected()) selectedFood = "Pasta";
+                else if (papRadio.isSelected()) selectedFood = "Pap and Wors";
+                else if (otherRadio.isSelected()) selectedFood = "Other";
+
+                if (selectedFood == null) {
+                    JOptionPane.showMessageDialog(frame, "Please select a favourite food.");
+                    return;
+                }
+
+                FavouriteFood foodEnum = FavouriteFood.fromKey(selectedFood);
+
 
                 String moviesRating = (String) moviesBox.getSelectedItem();
                 String radioRating = (String) radioBox.getSelectedItem();
@@ -123,11 +152,12 @@ public class SurveyApp {
                 System.out.println(contact);
 
                 UserPreference userPreference = new UserPreference()
-                        .setFavouriteFood(FavouriteFood.fromKey(favoriteFood.toString()))
+                        .setFavouriteFood(foodEnum)
                         .setWatchingTV(PreferenceRating.fromKey(tvRating))
                         .setEatOut(PreferenceRating.fromKey(eatOutRating))
                         .setWatchingMovies(PreferenceRating.fromKey(moviesRating))
                         .setListeningToRadio(PreferenceRating.fromKey(radioRating));
+
 
                 userPreference = userPreferenceService.saveUserPreference(userPreference);
 
