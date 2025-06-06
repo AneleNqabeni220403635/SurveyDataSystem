@@ -45,6 +45,10 @@ public class SurveyForm {
         return this;
     }
 
+    public SurveyForm setPreference(UserPreference preference){
+        this.preference = preference;
+        return this;
+    }
 
     // Getters
     public Long getId() {

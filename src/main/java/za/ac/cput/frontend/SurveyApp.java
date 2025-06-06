@@ -129,7 +129,7 @@ public class SurveyApp {
                         .setWatchingMovies(PreferenceRating.fromKey(moviesRating))
                         .setListeningToRadio(PreferenceRating.fromKey(radioRating));
 
-                userPreferenceService.saveUserPreference(userPreference);
+                userPreference = userPreferenceService.saveUserPreference(userPreference);
 
                 try {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -139,8 +139,8 @@ public class SurveyApp {
                             .setName(fullName)
                             .setCell(contact)
                             .setEmail(email)
-                            .setDob(parsedDob);
-
+                            .setDob(parsedDob)
+                    .setPreference(userPreference);
                     surveyFormService.saveSurveyForm(surveyForm);
 
                 } catch (Exception ex) {
